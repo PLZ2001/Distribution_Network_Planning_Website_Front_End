@@ -1,0 +1,1 @@
+serve build -s -l 3001 -C
