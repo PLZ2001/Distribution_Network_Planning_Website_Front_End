@@ -27,7 +27,7 @@ function TopBar() {
     }, 1000)
 
     return (
-        <Box sx={{width: '100%', backgroundColor: '#ffffff'}}>
+        <Box sx={{width: '100%', backgroundColor: '#0A141C'}}>
             <Box sx={{height: '3px', width: '100%'}}/>
             <Grid container spacing={0}>
                 <Grid xs={1}/>

@@ -9,14 +9,14 @@ function ErrorBoard(p: { error: any }) {
     return (
         <Box sx={{
             width: '100%',
-            background: '#FFFFFF',
+            background: '#0A141C',
             borderTopLeftRadius: '20px',
             borderRadius: '20px',
             minHeight: `calc(${window.innerHeight}px - 92px)`
         }}>
             <Box sx={{
                 width: '100%',
-                background: '#FFFFFF',
+                background: '#0A141C',
                 borderRadius: '20px',
                 minHeight: `calc(${window.innerHeight}px - 92px)`
             }}>
@@ -27,14 +27,14 @@ function ErrorBoard(p: { error: any }) {
                 <Box sx={{height: '100px', width: '100%'}}/>
                 <Box display="flex" justifyContent="center" alignItems="center" sx={{width: '100%'}}>
                     <Box display="flex" justifyContent="center" alignItems="center" sx={{width: '80%'}}>
-                        <Typography color='black' sx={{fontWeight: 'bold', fontSize: 'h3.fontSize'}}>
+                        <Typography color="text.secondary" sx={{fontWeight: 'bold', fontSize: 'h3.fontSize'}}>
                             {(isRouteErrorResponse(route_error) ? "错误：" + route_error.status + " " + route_error.statusText : p.error ? String(p.error) : "抱歉，出了些问题")}
                         </Typography>
                     </Box>
                 </Box>
                 <Box display="flex" justifyContent="center" alignItems="center" sx={{width: '100%'}}>
                     <Box display="flex" justifyContent="center" alignItems="center" sx={{width: '80%'}}>
-                        <Typography color='black' sx={{fontWeight: 'bold', fontSize: 'h5.fontSize'}}>
+                        <Typography color="text.secondary" sx={{fontWeight: 'bold', fontSize: 'h5.fontSize'}}>
                             {(isRouteErrorResponse(route_error) ? "详细信息：" + route_error.data : "")}
                         </Typography>
                     </Box>

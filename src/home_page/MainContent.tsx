@@ -99,9 +99,13 @@ function DxfUpload(p:{submit_success: boolean, set_submit_success: (value: (((pr
 
     const [distribution_network, set_distribution_network] = useState({
         name: "",
-        lines: [{path: [], feeder_name: "", feeder_type: "", line_length: 0}],
-        dots: [{center_x: 0, center_y: 0, name: "", dot_type: ""}],
+        lines: [{path: [], feeder_name: "", feeder_type: "", line_length: 0, power_supply_unit_name: ""}],
+        dots: [{center_x: 0, center_y: 0, name: "", dot_type: "", power_supply_unit_name: ""}],
         graph: {
+            node: [{id: "", x: 0, y: 0, data: {type: ""}, style: {keyshape:{size:0, fill:""}, label:{value:"", position:"", fontSize: 0}}}],
+            edge: [{source:"", target: ""}],
+        },
+        simple_graph: {
             node: [{id: "", x: 0, y: 0, data: {type: ""}, style: {keyshape:{size:0, fill:""}, label:{value:"", position:"", fontSize: 0}}}],
             edge: [{source:"", target: ""}],
         }
@@ -159,7 +163,7 @@ function DxfUpload(p:{submit_success: boolean, set_submit_success: (value: (((pr
         shape: {
             field: 'dot_type',
             value: ({ dot_type }) => {
-                if (dot_type == "110kV变电站") {
+                if (dot_type == "高压变电站") {
                     return "triangle"
                 } else if (dot_type == "环网柜/联络柜" || dot_type == "配电台变") {
                     return "square"
@@ -171,7 +175,7 @@ function DxfUpload(p:{submit_success: boolean, set_submit_success: (value: (((pr
         size: {
             field: 'dot_type',
             value: ({ dot_type }) => {
-                if (dot_type == "110kV变电站") {
+                if (dot_type == "高压变电站") {
                     return 10
                 } else if (dot_type == "环网柜/联络柜" || dot_type == "配电台变") {
                     return 5
@@ -183,7 +187,7 @@ function DxfUpload(p:{submit_success: boolean, set_submit_success: (value: (((pr
         color: {
             field: 'dot_type',
             value: ({ dot_type }) => {
-                if (dot_type == "110kV变电站") {
+                if (dot_type == "高压变电站") {
                     return "#FF3900"
                 } else if (dot_type == "环网柜/联络柜" || dot_type == "配电台变") {
                     return "#00FF76"
@@ -200,17 +204,22 @@ function DxfUpload(p:{submit_success: boolean, set_submit_success: (value: (((pr
 
     const [lineOptions, setLineOptions] = useState(lineLayerOptions);
     const [lineSource, setLineSource] = useState({
-        data: [{path: [[113.27143, 23.13534]], feeder_name: "", feeder_type: "", line_length: 0}],
+        data: [{path: [[113.27143, 23.13534]], feeder_name: "", feeder_type: "", line_length: 0, power_supply_unit_name: ""}],
         parser: { type: 'json', coordinates: 'path' },
     });
 
     const [dotOptions, setDotOptions] = useState(dotLayerOptions);
     const [dotSource, setDotSource] = useState({
-        data: [{center_x: 113.27143, center_y: 23.13534, name: "", dot_type: ""}],
+        data: [{center_x: 113.27143, center_y: 23.13534, name: "", dot_type: "", power_supply_unit_name: ""}],
         parser: { type: 'json', x: 'center_x', y: 'center_y' },
     });
 
     const [graphData, setGraphData] = useState({
+        nodes: [{id: "", x: 0, y: 0, data: {type: ""}, style: {keyshape:{size:0, fill:""}, label:{value:"", position:"", fontSize: 0}}}],
+        edges: [{source:"", target: ""}],
+    });
+
+    const [simpleGraphData, setSimpleGraphData] = useState({
         nodes: [{id: "", x: 0, y: 0, data: {type: ""}, style: {keyshape:{size:0, fill:""}, label:{value:"", position:"", fontSize: 0}}}],
         edges: [{source:"", target: ""}],
     });
@@ -220,6 +229,7 @@ function DxfUpload(p:{submit_success: boolean, set_submit_success: (value: (((pr
             setLineSource((prevState) => ({ ...prevState, data: distribution_network.lines }));
             setDotSource((prevState) => ({ ...prevState, data: distribution_network.dots }));
             setGraphData({nodes: distribution_network.graph.node, edges: distribution_network.graph.edge, });
+            setSimpleGraphData({nodes: distribution_network.simple_graph.node, edges: distribution_network.simple_graph.edge, });
         }
     }, [distribution_network]);
 
@@ -227,7 +237,7 @@ function DxfUpload(p:{submit_success: boolean, set_submit_success: (value: (((pr
         {
             layer: 'myLineLayer',
             title: '馈线',
-            customContent: (data: {path: [number, number][], feeder_name: string, feeder_type: string, line_length: number}) => {
+            customContent: (data: {path: [number, number][], feeder_name: string, feeder_type: string, line_length: number, power_supply_unit_name: string}) => {
                 return (
                     <Box alignItems="center" sx={{width: '100%'}}>
                         <Typography color="text.secondary"
@@ -240,6 +250,10 @@ function DxfUpload(p:{submit_success: boolean, set_submit_success: (value: (((pr
                         </Typography>
                         <Typography color="text.secondary"
                                     sx={{fontSize: 'subtitle2.fontSize'}}>
+                            所属供电单元：{data.power_supply_unit_name}
+                        </Typography>
+                        <Typography color="text.secondary"
+                                    sx={{fontSize: 'subtitle2.fontSize'}}>
                             长度：{data.line_length} 米
                         </Typography>
                     </Box>
@@ -249,7 +263,7 @@ function DxfUpload(p:{submit_success: boolean, set_submit_success: (value: (((pr
         {
             layer: 'myDotLayer',
             title: '兴趣点',
-            customContent: (data: {center_x: number, center_y: number, name: string, dot_type: string}) => {
+            customContent: (data: {center_x: number, center_y: number, name: string, dot_type: string, power_supply_unit_name: string}) => {
                 return (
                     <Box alignItems="center" sx={{width: '100%'}}>
                         <Typography color="text.secondary"
@@ -259,6 +273,10 @@ function DxfUpload(p:{submit_success: boolean, set_submit_success: (value: (((pr
                         <Typography color="text.secondary"
                                     sx={{fontSize: 'subtitle2.fontSize'}}>
                             名称：{data.name}
+                        </Typography>
+                        <Typography color="text.secondary"
+                                    sx={{fontSize: 'subtitle2.fontSize'}}>
+                            所属供电单元：{data.power_supply_unit_name}
                         </Typography>
                     </Box>
                 );
@@ -283,7 +301,7 @@ function DxfUpload(p:{submit_success: boolean, set_submit_success: (value: (((pr
             >
                 <CircularProgress color="inherit"/>
             </Backdrop>
-            <Paper elevation={12} sx={{width: '100%', borderRadius: '20px'}}>
+            <Paper elevation={0} sx={{width: '100%', borderRadius: '20px'}}>
                 <Box sx={{height: '40px', width: '100%'}}/>
                 <Box display="flex" justifyContent="center" alignItems="center" sx={{width: '100%'}}>
                     <Stack display="flex" justifyContent="center" alignItems="center" direction="column" sx={{width: '90%'}}>
@@ -333,12 +351,23 @@ function DxfUpload(p:{submit_success: boolean, set_submit_success: (value: (((pr
                             </Grid>
                         </Grid>
                         <Box sx={{height: '40px', width: '100%'}}/>
-                        <LarkMap {...config} logoVisible={false} style={{ width: '100%', height: '500px' }}>
-                            <MapThemeControl />
-                            <LineLayer {...lineOptions} source={lineSource} id="myLineLayer"/>
-                            <PointLayer {...dotOptions} source={dotSource} id="myDotLayer"/>
-                            <LayerPopup closeButton={true} anchor="bottom-left" trigger="click" items={items} />
-                        </LarkMap>
+                        <Grid container spacing={5} sx={{width: '100%'}}>
+                            <Grid xs={8}>
+                                <LarkMap {...config} logoVisible={false} style={{ width: '100%', height: '500px' }}>
+                                    <MapThemeControl />
+                                    <LineLayer {...lineOptions} source={lineSource} id="myLineLayer"/>
+                                    <PointLayer {...dotOptions} source={dotSource} id="myDotLayer"/>
+                                    <LayerPopup closeButton={true} anchor="bottom-left" trigger="click" items={items} />
+                                </LarkMap>
+                            </Grid>
+                            <Grid xs={4}>
+                                <Graphin data={simpleGraphData} theme={{ mode: 'dark'}} layout={{ type: 'graphin-force'}} style={{ width: '100%', height: '500px' }}>
+                                    <ZoomCanvas enableOptimize />
+                                    <DragCanvas enableOptimize />
+                                    <ActivateRelations/>
+                                </Graphin>
+                            </Grid>
+                        </Grid>
                         <Box sx={{height: '40px', width: '100%'}}/>
                         <Graphin data={graphData} theme={{ mode: 'dark'}} layout={{ type: 'concentric',maxLevelDiff: 0.05, sortBy: 'degree'}} style={{ width: '100%', height: '500px' }}>
                             <ZoomCanvas enableOptimize />
@@ -358,13 +387,13 @@ function MainContent() {
     return (
         <Box sx={{
             width: '100%',
-            background: '#FFFFFF',
+            background: '#0A141C',
             borderRadius: '20px',
             minHeight: `calc(${window.innerHeight}px - 92px)`
         }}>
             <Box sx={{
                 width: '100%',
-                background: '#FFFFFF',
+                background: '#0A141C',
                 borderRadius: '20px',
                 minHeight: `calc(${window.innerHeight}px - 92px)`
             }}>

@@ -13,13 +13,14 @@ enum API_STATUS {SUCCESS, FAILURE_WITH_REASONS, FAILURE_WITHOUT_REASONS}
 const THEME = createTheme({
     // 调色板
     palette: {
+        mode: 'dark',
         // 主色调
         primary: {
             main: '#1463d8'
         },
         // 次色调
         secondary: {
-            main: '#808080'
+            main: '#B6B9BB'
         },
     },
     // 字

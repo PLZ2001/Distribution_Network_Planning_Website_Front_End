@@ -16,7 +16,7 @@ function HomePage() {
 
     return (
         <ThemeProvider theme={THEME}>
-            <Box  sx={{width: '100%', backgroundColor: '#ffffff'}}>
+            <Box  sx={{width: '100%', backgroundColor: '#0A141C'}}>
                 {/*顶部栏*/}
                 <TopBar/>
                 {/*主体内容*/}
