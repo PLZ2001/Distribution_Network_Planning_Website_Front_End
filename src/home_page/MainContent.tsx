@@ -289,6 +289,7 @@ function DxfUpload(p:{submit_success: boolean, set_submit_success: (value: (((pr
         DragCanvas, // 拖拽画布
         ZoomCanvas, //缩放画布
         ActivateRelations, // 关联高亮
+        FitView,
     } = Behaviors;
 
     return (
@@ -304,7 +305,7 @@ function DxfUpload(p:{submit_success: boolean, set_submit_success: (value: (((pr
             <Paper elevation={0} sx={{width: '100%', borderRadius: '20px'}}>
                 <Box sx={{height: '40px', width: '100%'}}/>
                 <Box display="flex" justifyContent="center" alignItems="center" sx={{width: '100%'}}>
-                    <Stack display="flex" justifyContent="center" alignItems="center" direction="column" sx={{width: '90%'}}>
+                    <Stack display="flex" justifyContent="center" alignItems="center" direction="column" sx={{width: '95%'}}>
                         <Grid container spacing={0} sx={{width: '100%'}}>
                             <Grid xs>
                                 <Stack display="flex" justifyContent="start" direction="row" alignItems="center"
@@ -352,7 +353,7 @@ function DxfUpload(p:{submit_success: boolean, set_submit_success: (value: (((pr
                         </Grid>
                         <Box sx={{height: '40px', width: '100%'}}/>
                         <Grid container spacing={5} sx={{width: '100%'}}>
-                            <Grid xs={8}>
+                            <Grid xs={6}>
                                 <LarkMap {...config} logoVisible={false} style={{ width: '100%', height: '500px' }}>
                                     <MapThemeControl />
                                     <LineLayer {...lineOptions} source={lineSource} id="myLineLayer"/>
@@ -360,20 +361,15 @@ function DxfUpload(p:{submit_success: boolean, set_submit_success: (value: (((pr
                                     <LayerPopup closeButton={true} anchor="bottom-left" trigger="click" items={items} />
                                 </LarkMap>
                             </Grid>
-                            <Grid xs={4}>
-                                <Graphin data={simpleGraphData} theme={{ mode: 'dark'}} layout={{ type: 'graphin-force'}} style={{ width: '100%', height: '500px' }}>
-                                    <ZoomCanvas enableOptimize />
+                            <Grid xs={6}>
+                                <Graphin fitCenter maxZoom={1000} data={simpleGraphData} theme={{ mode: 'dark'}} layout={{ type: 'preset'}} style={{ width: '100%', height: '500px' }}>
+                                    <ZoomCanvas  maxZoom={1000} enableOptimize />
                                     <DragCanvas enableOptimize />
                                     <ActivateRelations/>
+                                    <FitView/>
                                 </Graphin>
                             </Grid>
                         </Grid>
-                        <Box sx={{height: '40px', width: '100%'}}/>
-                        <Graphin data={graphData} theme={{ mode: 'dark'}} layout={{ type: 'concentric',maxLevelDiff: 0.05, sortBy: 'degree'}} style={{ width: '100%', height: '500px' }}>
-                            <ZoomCanvas enableOptimize />
-                            <DragCanvas enableOptimize />
-                            <ActivateRelations/>
-                        </Graphin>
                     </Stack>
                 </Box>
                 <Box sx={{height: '40px', width: '100%'}}/>
@@ -402,7 +398,7 @@ function MainContent() {
                     <TopMenu/>
                 </Box>
                 <Box display="flex" justifyContent="center" alignItems="center" sx={{width: '100%'}}>
-                    <Stack spacing={2} sx={{width: '80%'}}>
+                    <Stack spacing={2} sx={{width: '95%'}}>
                         <Box sx={{height: '10px', width: '100%'}}/>
                         <DxfUpload submit_success={submit_success} set_submit_success={set_submit_success}/>
                         <Box sx={{height: '50px', width: '100%'}}/>
